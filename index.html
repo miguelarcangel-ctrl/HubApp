@@ -11,12 +11,8 @@
   :root {
     --navy: #1A1060;
     --navy-deep: #0e0940;
-    --navy-mid: #221580;
     --green: #00C389;
-    --green-light: rgba(0,195,137,0.12);
     --white: #ffffff;
-    --off-white: #f4f5f9;
-    --text-dark: #0e0940;
     --muted: #6b7199;
   }
 
@@ -24,11 +20,11 @@
     min-height: 100%;
     font-family: 'Barlow', sans-serif;
     background: var(--white);
-    color: var(--text-dark);
+    color: var(--navy-deep);
     overflow-x: hidden;
   }
 
-  /* ── Background: white + green grid lines ── */
+  /* Fondo blanco con grid verde */
   .bg {
     position: fixed;
     inset: 0;
@@ -41,23 +37,19 @@
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(0,195,137,0.18) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,195,137,0.18) 1px, transparent 1px);
+      linear-gradient(rgba(0,195,137,0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,195,137,0.15) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 
-  /* soft vignette so edges don't look clipped */
+  /* vignette central para que el centro quede limpio */
   .bg::after {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255,255,255,0.85) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 80% at 0% 100%, rgba(255,255,255,0.7) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 80% at 100% 100%, rgba(255,255,255,0.7) 0%, transparent 60%);
+    background: radial-gradient(ellipse 85% 75% at 50% 40%, rgba(255,255,255,0.92) 0%, transparent 100%);
   }
 
-  /* ── Page ── */
   .page {
     position: relative;
     z-index: 1;
@@ -68,7 +60,7 @@
     padding: 64px 24px 80px;
   }
 
-  /* ── Header ── */
+  /* Header */
   .header {
     display: flex;
     flex-direction: column;
@@ -82,13 +74,11 @@
     margin-bottom: 28px;
   }
 
-  /* logo on white bg — use the color version or keep white with navy bg pill */
+  /* Logo color sobre fondo blanco — sin filtro */
   .logo-wrap img {
-    height: 88px;
+    height: 100px;
     width: auto;
     display: block;
-    /* invert to show dark version on white background */
-    filter: brightness(0) saturate(100%) invert(8%) sepia(60%) saturate(2000%) hue-rotate(230deg) brightness(80%);
   }
 
   .header-eyebrow {
@@ -126,7 +116,7 @@
     letter-spacing: 0.3px;
   }
 
-  /* ── Cards ── */
+  /* Cards */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
@@ -138,7 +128,7 @@
   .card {
     position: relative;
     background: var(--navy);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.06);
     border-radius: 18px;
     padding: 36px 32px 30px;
     text-decoration: none;
@@ -157,20 +147,20 @@
   .card:nth-child(2) { animation-delay: 0.22s; }
   .card:nth-child(3) { animation-delay: 0.32s; }
 
-  /* subtle inner grid on cards */
+  /* mini grid interna */
   .card::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
     background-size: 28px 28px;
     border-radius: inherit;
     pointer-events: none;
   }
 
-  /* green top glow on hover */
+  /* línea verde top al hover */
   .card::after {
     content: '';
     position: absolute;
@@ -185,9 +175,9 @@
     transform: translateY(-7px);
     border-color: rgba(0,195,137,0.4);
     box-shadow:
-      0 24px 64px rgba(14,9,64,0.25),
-      0 0 0 1px rgba(0,195,137,0.2),
-      0 0 40px rgba(0,195,137,0.08);
+      0 24px 64px rgba(14,9,64,0.22),
+      0 0 0 1px rgba(0,195,137,0.18),
+      0 0 40px rgba(0,195,137,0.07);
   }
 
   .card:hover::after { opacity: 1; }
@@ -242,7 +232,7 @@
     font-size: 13.5px;
     font-weight: 300;
     line-height: 1.65;
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.52);
     flex: 1;
     position: relative;
     z-index: 1;
@@ -299,7 +289,7 @@
     stroke-linejoin: round;
   }
 
-  /* ── Footer ── */
+  /* Footer */
   .footer {
     margin-top: 72px;
     text-align: center;
@@ -308,7 +298,7 @@
 
   .footer-text {
     font-size: 11.5px;
-    color: rgba(107,113,153,0.6);
+    color: rgba(107,113,153,0.55);
     letter-spacing: 0.5px;
   }
 
@@ -327,7 +317,7 @@
   @media (max-width: 600px) {
     .page { padding: 44px 16px 60px; }
     .header { margin-bottom: 40px; }
-    .logo-wrap img { height: 70px; }
+    .logo-wrap img { height: 80px; }
     .card { padding: 28px 22px 24px; }
     .card-title { font-size: 24px; }
   }
