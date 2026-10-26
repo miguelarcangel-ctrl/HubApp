@@ -4,407 +4,371 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DP World Panamá — Portal de Aplicaciones</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+  /* Mismos tokens que el Cotizador 3PL */
   :root {
-    --navy: #1A1060;
-    --navy-deep: #0e0940;
+    --blue: #1A1060;
+    --blue-mid: #2A1F8F;
     --green: #00C389;
-    --white: #ffffff;
-    --muted: #6b7199;
+    --orange: #F59E0B;
+    --ink: #1B1B2F;
+    --mid: #64748B;
+    --border: #E2E8F0;
+    --light: #F8F9FC;
+    --white: #FFFFFF;
+    --shadow-lg: 0 8px 32px rgba(26,16,96,.14);
   }
-
   html, body {
     min-height: 100%;
     font-family: 'Barlow', sans-serif;
-    background: var(--white);
-    color: var(--navy-deep);
+    color: var(--ink);
     overflow-x: hidden;
   }
-
-  /* Fondo blanco con grid verde */
-  .bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    background: #ffffff;
-  }
-
-  .bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,195,137,0.15) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,195,137,0.15) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-
-  /* vignette central para que el centro quede limpio */
-  .bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 85% 75% at 50% 40%, rgba(255,255,255,0.92) 0%, transparent 100%);
-  }
-
+  /* Fondo del login del Cotizador */
+  body { min-height: 100vh; background: linear-gradient(135deg, var(--blue) 0%, #2D1B8E 50%, #1A1060 100%); background-color: var(--blue); }
   .page {
-    position: relative;
-    z-index: 1;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 64px 24px 80px;
+    padding: 40px 24px 56px;
   }
-
-  /* Header */
+  /* Encabezado: tarjeta blanca como la del login */
   .header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px 32px 22px;
+    box-shadow: var(--shadow-lg);
     text-align: center;
-    margin-bottom: 64px;
-    animation: fadeDown 0.9s cubic-bezier(0.16,1,0.3,1) both;
-  }
-
-  .logo-wrap {
+    width: 100%;
+    max-width: 420px;
     margin-bottom: 28px;
+    animation: fadeDown 0.7s cubic-bezier(0.16,1,0.3,1) both;
   }
-
-  /* Logo color sobre fondo blanco — sin filtro */
-  .logo-wrap img {
-    height: 100px;
-    width: auto;
-    display: block;
-  }
-
-  .header-eyebrow {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 12px;
-  }
-
+  .header img { height: 64px; width: auto; display: block; margin: 0 auto 12px; }
   .header-title {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(38px, 8vw, 68px);
     font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -0.5px;
-    color: var(--navy);
-    margin-bottom: 16px;
+    font-size: 1.5rem;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 4px;
   }
+  .header-sub { font-size: .78rem; color: var(--mid); }
 
-  .header-divider {
-    width: 40px;
-    height: 3px;
-    background: var(--green);
-    border-radius: 2px;
-    margin: 0 auto 16px;
-  }
-
-  .header-sub {
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--muted);
-    letter-spacing: 0.3px;
-  }
-
-  /* Cards */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 20px;
+  /* Hub: red de apps + tarjeta de detalle */
+  .hub {
     width: 100%;
-    max-width: 1000px;
-  }
-
-  .card {
-    position: relative;
-    background: var(--navy);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 18px;
-    padding: 36px 32px 30px;
-    text-decoration: none;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition:
-      transform 0.4s cubic-bezier(0.16,1,0.3,1),
-      border-color 0.3s ease,
-      box-shadow 0.4s ease;
-    animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
-  }
-
-  .card:nth-child(1) { animation-delay: 0.12s; }
-  .card:nth-child(2) { animation-delay: 0.22s; }
-  .card:nth-child(3) { animation-delay: 0.32s; }
-
-  /* mini grid interna */
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-    background-size: 28px 28px;
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  /* línea verde top al hover */
-  .card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--green), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-7px);
-    border-color: rgba(0,195,137,0.4);
-    box-shadow:
-      0 24px 64px rgba(14,9,64,0.22),
-      0 0 0 1px rgba(0,195,137,0.18),
-      0 0 40px rgba(0,195,137,0.07);
-  }
-
-  .card:hover::after { opacity: 1; }
-  .card:active { transform: translateY(-3px); }
-
-  .card-icon {
-    width: 54px;
-    height: 54px;
-    border-radius: 14px;
-    background: rgba(0,195,137,0.12);
-    border: 1px solid rgba(0,195,137,0.25);
-    display: flex;
+    max-width: 1080px;
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 20px;
     align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    margin-bottom: 24px;
-    position: relative;
-    z-index: 1;
-    flex-shrink: 0;
-    transition: background 0.3s, border-color 0.3s;
+    animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s both;
   }
+  @media (min-width: 960px) { .hub { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); } }
+  .hub-svg svg { display: block; width: 100%; height: auto; max-width: 600px; margin: 0 auto; overflow: visible; }
+  .app { cursor: pointer; }
+  .app:focus { outline: none; }
+  .app .disc { fill: #261A82; transition: fill .2s; }
+  .app .ab { fill: #fff; transition: fill .2s; }
+  .app:hover .disc { fill: #34289A; }
+  .app.on .disc { fill: #fff; }
+  .app.on .ab { fill: var(--blue); }
+  .app.on .ring, .app:focus-visible .ring { stroke: var(--green); stroke-width: 3.5; stroke-dasharray: none; }
+  .app.main .disc { fill: #fff; }
+  .app.main .ab { fill: var(--blue); }
+  .app .lbl { fill: rgba(255,255,255,0.85); }
+  .spoke { stroke: rgba(255,255,255,0.22); stroke-width: 2; }
+  .spoke.dev { stroke-dasharray: 5 6; }
+  .pulse { fill: var(--green); }
+  .hint { text-align: center; font-size: .78rem; color: rgba(255,255,255,0.6); margin-top: 6px; }
 
-  .card:hover .card-icon {
-    background: rgba(0,195,137,0.22);
-    border-color: rgba(0,195,137,0.55);
+  .hub-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 26px 24px;
+    box-shadow: var(--shadow-lg);
+    min-width: 0;
   }
-
-  .card-tag {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 3px;
+  .st {
+    display: inline-block;
+    font: 700 .65rem 'Barlow', sans-serif;
+    letter-spacing: .07em;
     text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 7px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.08;
-    color: #fff;
+    padding: 4px 9px;
+    border-radius: 6px;
     margin-bottom: 12px;
-    position: relative;
-    z-index: 1;
   }
-
-  .card-desc {
-    font-size: 13.5px;
-    font-weight: 300;
-    line-height: 1.65;
-    color: rgba(255,255,255,0.52);
-    flex: 1;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-footer {
-    margin-top: 28px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-cta {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 2px;
+  .st.ok { background: rgba(0,195,137,.12); color: #009E6E; }
+  .st.dev { background: rgba(245,158,11,.14); color: #B45309; }
+  .card-tag {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .07em;
     text-transform: uppercase;
-    color: var(--green);
-    transition: letter-spacing 0.25s;
+    color: var(--mid);
+    margin-bottom: 4px;
   }
-
-  .card:hover .card-cta { letter-spacing: 3px; }
-
-  .card-arrow {
-    width: 32px;
-    height: 32px;
+  .hub-card h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1.6rem, 3.6vw, 2rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .hub-card p.d { margin-top: 10px; font-size: .92rem; line-height: 1.55; color: var(--ink); }
+  .hub-card ul { margin-top: 14px; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .hub-card li { display: flex; gap: 10px; font-size: .88rem; line-height: 1.45; color: var(--mid); }
+  .hub-card li::before {
+    content: '';
+    flex: none;
+    width: 6px; height: 6px;
+    margin-top: 7px;
     border-radius: 50%;
-    background: rgba(0,195,137,0.1);
-    border: 1px solid rgba(0,195,137,0.3);
-    display: flex;
+    background: var(--green);
+  }
+  .actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+  /* Botón igual al "Iniciar sesión" del Cotizador */
+  .btn {
+    flex: 1 1 180px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.25s, transform 0.25s;
-    flex-shrink: 0;
+    gap: 8px;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    text-decoration: none;
+    transition: all .2s cubic-bezier(.4,0,.2,1);
   }
+  .btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .btn.pri { background: var(--blue); color: #fff; }
+  .btn.pri:hover { background: var(--blue-mid); }
+  .btn.sec { border: 1.5px solid var(--border); color: var(--blue); background: var(--light); }
+  .btn.sec:hover { border-color: var(--blue); }
+  .soon { font-size: .82rem; color: var(--mid); }
+  .note { margin-top: 16px; font-size: .72rem; color: var(--mid); }
 
-  .card:hover .card-arrow {
-    background: rgba(0,195,137,0.25);
-    transform: translateX(3px);
+  /* Acceso directo */
+  .quick {
+    width: 100%;
+    max-width: 1080px;
+    margin-top: 44px;
+    animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.2s both;
   }
+  .quick-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .85rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 12px;
+  }
+  .quick-head::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.18); }
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .qa {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--white);
+    border-radius: 10px;
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: 0 2px 12px rgba(26,16,96,.08);
+    transition: all .2s cubic-bezier(.4,0,.2,1);
+    min-width: 0;
+  }
+  a.qa:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .qa.off { opacity: .6; }
+  .qa .ico {
+    flex: none;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font: 800 14px 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+  .qa.dev .ico { border-color: var(--orange); border-style: dashed; }
+  .qa b { display: block; font: 800 1.05rem/1.1 'Barlow Condensed', sans-serif; color: var(--blue); text-transform: uppercase; letter-spacing: .04em; }
+  .qa small { display: block; font-size: .72rem; color: var(--mid); margin-top: 2px; }
+  .qa .arr { margin-left: auto; color: var(--blue); flex: none; }
+  .qa .arr svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; display: block; }
 
-  .card-arrow svg {
-    width: 13px;
-    height: 13px;
-    stroke: var(--green);
-    fill: none;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 
   /* Footer */
-  .footer {
-    margin-top: 72px;
-    text-align: center;
-    animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.5s both;
-  }
-
-  .footer-text {
-    font-size: 11.5px;
-    color: rgba(107,113,153,0.55);
-    letter-spacing: 0.5px;
-  }
-
-  .sep { display: inline-block; margin: 0 8px; opacity: 0.5; }
-
+  .footer { margin-top: 24px; text-align: center; }
+  .footer-text { font-size: .68rem; color: rgba(255,255,255,0.55); letter-spacing: .07em; text-transform: uppercase; }
   @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-22px); }
+    from { opacity: 0; transform: translateY(-16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(26px); }
+    from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   @media (max-width: 600px) {
-    .page { padding: 44px 16px 60px; }
-    .header { margin-bottom: 40px; }
-    .logo-wrap img { height: 80px; }
-    .card { padding: 28px 22px 24px; }
-    .card-title { font-size: 24px; }
+    .page { padding: 24px 16px 48px; }
+    .header { padding: 20px 20px 18px; margin-bottom: 16px; }
+    .header img { height: 54px; }
+    .hub-card { padding: 24px 20px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
   }
 </style>
 </head>
 <body>
-
-<div class="bg"></div>
-
 <div class="page">
-
   <header class="header">
-    <div class="logo-wrap">
-      <img
-        src="https://raw.githubusercontent.com/miguelarcangel-ctrl/cotizador-dpworld/main/logo_white.png"
-        alt="DP World Panamá"
-      >
-    </div>
-    <p class="header-eyebrow">DAL · Colón Logistics Park</p>
-    <h1 class="header-title">Portal de<br>Aplicaciones</h1>
-    <div class="header-divider"></div>
-    <p class="header-sub">Operación 3PL — Uso interno</p>
+    <img src="https://raw.githubusercontent.com/miguelarcangel-ctrl/cotizador-dpworld/main/logo_white.png" alt="DP World Panamá">
+    <h1 class="header-title">Portal de Aplicaciones</h1>
+    <p class="header-sub">DAL · Colón Logistics Park · Panamá</p>
   </header>
 
-  <div class="cards">
+  <section class="hub" aria-label="Hub de aplicaciones">
+    <div class="hub-svg">
+      <svg viewBox="0 0 520 470" id="hubSvg" role="group" aria-label="Hub y aplicaciones"></svg>
+      <p class="hint">Toca cada app para ver qué hace y abrirla.</p>
+    </div>
+    <div class="hub-card" id="hubCard" aria-live="polite"></div>
+  </section>
 
-    <a class="card" href="https://cotizador-dpworld-i7d3.vercel.app/" target="_blank" rel="noopener">
-      <div class="card-icon">📋</div>
-      <p class="card-tag">Ventas</p>
-      <h2 class="card-title">Cotizador<br>DP World</h2>
-      <p class="card-desc">Generación de propuestas comerciales 3PL. Flujo completo de cotización con cálculo de tarifas, CAPEX/OPEX y documento de entrega operativa.</p>
-      <div class="card-footer">
-        <span class="card-cta">Abrir app</span>
-        <div class="card-arrow">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </div>
-      </div>
-    </a>
-
-    <a class="card" href="https://control-horas-dpworld.vercel.app/" target="_blank" rel="noopener">
-      <div class="card-icon">⏱️</div>
-      <p class="card-tag">Operaciones</p>
-      <h2 class="card-title">Control<br>de Horas</h2>
-      <p class="card-desc">Gestión de turnos y fuerza laboral. Dashboard en tiempo real, dimensionador de turnos y control de costos productivos vs. perdidos.</p>
-      <div class="card-footer">
-        <span class="card-cta">Abrir app</span>
-        <div class="card-arrow">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </div>
-      </div>
-    </a>
-
-    <a class="card" href="https://inspeccion-contenedores-dpworld.vercel.app/" target="_blank" rel="noopener">
-      <div class="card-icon">🚢</div>
-      <p class="card-tag">Calidad · BASC</p>
-      <h2 class="card-title">Inspección de<br>Contenedores</h2>
-      <p class="card-desc">Formulario digital de inspección SL-02-007. Guía de 7 puntos para despacho y exportación con registro fotográfico de hallazgos.</p>
-      <div class="card-footer">
-        <span class="card-cta">Abrir app</span>
-        <div class="card-arrow">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </div>
-      </div>
-    </a>
-
-    <a class="card" href="https://alertas-calidad-app.vercel.app/" target="_blank" rel="noopener">
-      <div class="card-icon">⚠️</div>
-      <p class="card-tag">Calidad · Bodega</p>
-      <h2 class="card-title">Alertas de<br>Calidad</h2>
-      <p class="card-desc">Generación y envío de Alertas de Calidad con evidencia fotográfica, PDF con marca DP World, y historial de alertas por cliente.</p>
-      <div class="card-footer">
-        <span class="card-cta">Abrir app</span>
-        <div class="card-arrow">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </div>
-      </div>
-    </a>
-
-  </div>
+  <section class="quick" aria-label="Acceso directo">
+    <h2 class="quick-head">En operación</h2>
+    <div class="quick-grid" id="qOk"></div>
+    <h2 class="quick-head">Prototipos y en desarrollo</h2>
+    <div class="quick-grid" id="qDev"></div>
+  </section>
 
   <footer class="footer">
-    <p class="footer-text">
-      DP World Panamá<span class="sep">·</span>DAL Colón Logistics Park<span class="sep">·</span>Uso Interno
-    </p>
+    <p class="footer-text">🔒 Uso interno exclusivo · DP World Panamá</p>
   </footer>
-
 </div>
 
+<script>
+/* Cada app: s = "ok" (en operación) o "dev" (prototipo / en desarrollo). links[0] es el principal. */
+var APPS = [
+  {id: "hub", n: "Hub", s: "ok", st: "En operación", tag: "Plataforma digital",
+   d: "La puerta de entrada a toda la plataforma. Acceso directo a cada app, sin recordar direcciones.",
+   b: ["Un solo lugar para todo el equipo", "Funciona en PC, tableta y celular", "Base para el login único de la versión 2"]},
+  {n: "Cotizador 3PL", lbl: "Cotizador", ab: "COT", s: "ok", st: "En operación", tag: "Ventas",
+   d: "Propuestas comerciales 3PL en minutos, con tarifas, CAPEX/OPEX y documento de entrega operativa.",
+   b: ["Cotización completa en menos de 5 minutos", "Margen con semáforo y benchmark de mercado", "PDF para el cliente y ficha interna"],
+   links: [["Abrir app", "https://cotizador-dpworld-i7d3.vercel.app/"]]},
+  {n: "Control de Horas", lbl: "Horas", ab: "HRS", s: "ok", st: "En operación", tag: "Operaciones",
+   d: "El turno completo en digital, del toolbox al cierre.",
+   b: ["Tareas con cronómetro y eficiencia en tiempo real", "Rutinas con QR en puntos de control", "Costo productivo contra costo perdido", "Pantalla TV para el piso de operación"],
+   links: [["Abrir app", "https://control-horas-dpworld.vercel.app/"], ["Pantalla TV", "https://control-horas-dpworld.vercel.app/dashboard.html"]]},
+  {n: "Control de Rampas", lbl: "Rampas", ab: "RMP", s: "ok", st: "En operación", tag: "Calidad · BASC",
+   d: "Inspección de contenedores BASC SL-02-007 con fotos y resultado automático, hoy convertida en Control de Rampas: el contenedor de la rampa al puerto.",
+   b: ["17 ítems con foto por ítem", "APTO o NO APTO al instante", "PDF listo para auditoría", "Seguimiento de rampas y vista para el cliente"],
+   links: [["Abrir app", "https://inspeccion-contenedores-dpworld.vercel.app/"]]},
+  {n: "Last Mile", lbl: "Last Mile", ab: "LM", s: "dev", st: "Prototipo", tag: "Transporte",
+   d: "Coordinación de bookings y transporte de contenedores con los transportistas, del retiro de vacío a la entrega en terminal.",
+   b: ["Bookings y asignación de transporte", "Visibilidad para el equipo y el cliente", "Se unirá con Control de Rampas"],
+   links: [["Abrir prototipo", "https://inspeccion-contenedores-dpworld.vercel.app/last-mile/prototype/"]]},
+  {n: "Alertas de Calidad", lbl: "Alertas", ab: "CAL", s: "ok", st: "En operación", tag: "Calidad · Bodega",
+   d: "Alertas de calidad estandarizadas y descargables, con la marca DP World.",
+   b: ["Formato único para toda la operación", "PDF listo para compartir", "Trazabilidad de cada incidencia"],
+   links: [["Abrir app", "https://alertas-calidad-app.vercel.app/"]]},
+  {n: "Reportería BI", lbl: "BI", ab: "BI", s: "dev", st: "En construcción", tag: "Inteligencia operativa",
+   d: "Tableros de Power BI e indicadores alimentados desde P4.",
+   b: ["KPIs de operación en un solo tablero", "Reportería automática", "Base de la inteligencia operativa del año 2"]}
+];
+
+var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+var svg = document.getElementById("hubSvg"), NS = "http://www.w3.org/2000/svg", cx = 260, cy = 228, R0 = 168;
+var ARROW = '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); }
+function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+
+var sats = APPS.slice(1);
+sats.forEach(function (a, i) {
+  var ang = -Math.PI / 2 + i * 2 * Math.PI / sats.length;
+  a.x = cx + R0 * Math.cos(ang); a.y = cy + R0 * Math.sin(ang);
+  el("line", {x1: cx, y1: cy, x2: a.x, y2: a.y, "class": "spoke" + (a.s === "dev" ? " dev" : "")});
+  if (!reduce) {
+    var c = el("circle", {r: 4, "class": "pulse"});
+    el("animateMotion", {dur: (2.4 + i * .3) + "s", repeatCount: "indefinite", path: "M" + cx + " " + cy + " L" + a.x + " " + a.y}, c);
+  }
+});
+
+function node(a, x, y, r, main) {
+  var g = el("g", {"class": "app" + (main ? " main" : ""), tabindex: "0", role: "button", "aria-label": a.n});
+  el("circle", {cx: x, cy: y, r: r, "class": "disc"}, g);
+  el("circle", {cx: x, cy: y, r: r, "class": "ring", fill: "none",
+    stroke: main ? "#00C389" : (a.s === "ok" ? "rgba(255,255,255,0.75)" : "#F59E0B"),
+    "stroke-width": main ? 3 : 2.5, "stroke-dasharray": a.s === "ok" ? "" : "5 5"}, g);
+  var t = el("text", {x: x, y: y + (main ? 10 : 6), "text-anchor": "middle", "class": "ab",
+    "font-family": "Barlow Condensed,Arial", "font-weight": "800", "font-size": main ? 30 : 18, "letter-spacing": "1"}, g);
+  t.textContent = main ? "HUB" : a.ab;
+  if (!main) {
+    var l = el("text", {x: x, y: y < cy - r ? y - r - 10 : y + r + 19, "text-anchor": "middle", "class": "lbl",
+      "font-family": "Barlow,Arial", "font-weight": "600", "font-size": "16"}, g);
+    l.textContent = a.lbl;
+  }
+  function s() { hubSel(a); }
+  g.addEventListener("click", s);
+  g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); s(); } });
+  a.g = g;
+}
+sats.forEach(function (a) { node(a, a.x, a.y, 34, false); });
+node(APPS[0], cx, cy, 58, true);
+
+function hubSel(a) {
+  sats.forEach(function (x) { x.g.classList.toggle("on", x === a); });
+  var acts = "";
+  if (a.links) {
+    acts = '<div class="actions">' + a.links.map(function (l, i) {
+      return '<a class="btn ' + (i ? "sec" : "pri") + '" href="' + esc(l[1]) + '" target="_blank" rel="noopener">' + esc(l[0]) + (i ? "" : ARROW) + '</a>';
+    }).join("") + '</div>';
+  } else if (a.id !== "hub") {
+    acts = '<div class="actions"><span class="soon">Disponible pronto.</span></div>';
+  }
+  document.getElementById("hubCard").innerHTML =
+    '<span class="st ' + a.s + '">' + esc(a.st) + '</span>' +
+    '<p class="card-tag">' + esc(a.tag) + '</p>' +
+    '<h2>' + esc(a.n) + '</h2>' +
+    '<p class="d">' + esc(a.d) + '</p>' +
+    '<ul>' + a.b.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul>' + acts +
+    (a.id === "hub" ? '<p class="note">Línea continua: en operación. Línea punteada: prototipo o en desarrollo.</p>' : "");
+}
+hubSel(APPS[0]);
+
+/* Acceso directo: una fila por app, agrupadas por estado */
+sats.forEach(function (a) {
+  var link = a.links && a.links[0];
+  var q = document.createElement(link ? "a" : "div");
+  q.className = "qa " + a.s + (link ? "" : " off");
+  if (link) { q.href = link[1]; q.target = "_blank"; q.rel = "noopener"; }
+  q.innerHTML = '<span class="ico">' + esc(a.ab) + '</span><span><b>' + esc(a.n) + '</b><small>' + esc(a.st) + ' · ' + esc(a.tag) + '</small></span>' +
+    (link ? '<span class="arr">' + ARROW + '</span>' : '');
+  document.getElementById(a.s === "ok" ? "qOk" : "qDev").appendChild(q);
+});
+</script>
 </body>
 </html>
