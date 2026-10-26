@@ -1,6 +1,9 @@
 # Línea gráfica de las apps DP World Panamá
 
-Toda app nueva o existente de la plataforma (Hub, Cotizador 3PL, Control de Horas, Control de Rampas, Last Mile, Alertas de Calidad y las que vengan) sigue la línea gráfica del **Cotizador 3PL**. Si hay duda, se copia lo que hace el Cotizador.
+Hay dos estilos, cada uno con su uso:
+
+- **Apps** (Cotizador 3PL, Control de Horas, Control de Rampas, Last Mile, Alertas de Calidad y las que vengan): línea gráfica del **Cotizador 3PL**, descrita abajo. Si hay duda, se copia lo que hace el Cotizador.
+- **Hub y mapas de procedimientos / manuales**: tema oscuro del **Mapa de Procedimientos** (ver la última sección).
 
 ## Tokens
 
@@ -34,5 +37,13 @@ Tipografía: **Barlow Condensed** 700–800 en mayúsculas para títulos, etique
 - Encabezado blanco fijo con borde inferior `#E2E8F0`, logo a la izquierda y navegación con botones Barlow Condensed en mayúsculas; el activo va en `#1A1060` con texto blanco.
 - Fondo `#F8F9FC` y contenido en tarjetas blancas con borde `#E2E8F0` y `border-radius:10–16px`.
 - Excepción: las pantallas de TV/piso de operación pueden ser oscuras para leerse a distancia.
+
+## Hub y mapas de procedimientos (tema oscuro)
+- Fondo `#0d0b28`; superficies `#16143d`; tarjetas internas `#1e1c50`; resalte `#252368`. Bordes blancos al 5 %, 10 % y 18 %. Texto blanco, secundario al 68 % y terciario al 42 %.
+- Barra superior fija `#16143d` con el logo para fondo oscuro (`assets/dpworld-logo-fondo-oscuro.png`), un separador vertical, título en Barlow Condensed 700 mayúsculas y subtítulo de 12 px; a la derecha, buscador en píldora.
+- Portada con degradado `#16143d → #0d0b28`: antetítulo verde `#00C389` de 13 px con tracking `.14em`, título Barlow Condensed 800 de 28–44 px y párrafo al 68 %.
+- Tarjetas `#16143d` con borde al 10 % y `border-radius:14px`; ícono en cuadro de 46 px con fondo de color al 15 % (verde, azul `#0099e6`, violeta `#b3b0ff`, ámbar `#f5a20b`).
+- Botón principal en píldora verde `#00C389` con texto `#06291e`; secundarios en píldora `#1e1c50`.
+- Referencias: `index.html` (el hub) y `mapa-procedimientos/index.html` de este repo.
 
 Referencia viva: https://cotizador-dpworld-i7d3.vercel.app/ y el portal https://github.com/miguelarcangel-ctrl/HubApp
