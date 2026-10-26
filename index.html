@@ -2,311 +2,210 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>DP World Panamá — Portal de Aplicaciones</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  /* Mismos tokens que el Cotizador 3PL */
-  :root {
-    --blue: #1A1060;
-    --blue-mid: #2A1F8F;
-    --green: #00C389;
-    --orange: #F59E0B;
-    --ink: #1B1B2F;
-    --mid: #64748B;
-    --border: #E2E8F0;
-    --light: #F8F9FC;
-    --white: #FFFFFF;
-    --shadow-lg: 0 8px 32px rgba(26,16,96,.14);
-  }
-  html, body {
-    min-height: 100%;
-    font-family: 'Barlow', sans-serif;
-    color: var(--ink);
-    overflow-x: hidden;
-  }
-  /* Fondo del login del Cotizador */
-  body { min-height: 100vh; background: linear-gradient(135deg, var(--blue) 0%, #2D1B8E 50%, #1A1060 100%); background-color: var(--blue); }
-  .page {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 24px 56px;
-  }
-  /* Encabezado: tarjeta blanca como la del login */
-  .header {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 24px 32px 22px;
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    width: 100%;
-    max-width: 420px;
-    margin-bottom: 28px;
-    animation: fadeDown 0.7s cubic-bezier(0.16,1,0.3,1) both;
-  }
-  .header img { height: 64px; width: auto; display: block; margin: 0 auto 12px; }
-  .header-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: var(--blue);
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    margin-bottom: 4px;
-  }
-  .header-sub { font-size: .78rem; color: var(--mid); }
+/* Misma línea gráfica que el Mapa de Procedimientos: tema oscuro índigo, barra superior con logo y tarjetas #16143d. */
+:root{
+  --bg:#0d0b28; --surf:#16143d; --card:#1e1c50; --raised:#252368;
+  --primary:#3E3C90; --pk:#2D2B6B;
+  --green:#00C389; --red:#E8003D; --amber:#f5a20b; --blue:#0099e6;
+  --b0:rgba(255,255,255,.05); --b1:rgba(255,255,255,.1); --b2:rgba(255,255,255,.18);
+  --t:#fff; --t2:rgba(255,255,255,.68); --t3:rgba(255,255,255,.42);
+  --r:10px; --r2:6px;
+  --fd:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
+  --fb:'Barlow','Segoe UI',Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--t);font-family:var(--fb);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--fd);text-transform:uppercase;letter-spacing:.04em;margin:0;text-wrap:balance}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-  /* Hub: red de apps + tarjeta de detalle */
-  .hub {
-    width: 100%;
-    max-width: 1080px;
-    display: grid;
-    grid-template-columns: minmax(0,1fr);
-    gap: 20px;
-    align-items: center;
-    animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s both;
-  }
-  @media (min-width: 960px) { .hub { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); } }
-  .hub-svg svg { display: block; width: 100%; height: auto; max-width: 600px; margin: 0 auto; overflow: visible; }
-  .app { cursor: pointer; }
-  .app:focus { outline: none; }
-  .app .disc { fill: #261A82; transition: fill .2s; }
-  .app .ab { fill: #fff; transition: fill .2s; }
-  .app:hover .disc { fill: #34289A; }
-  .app.on .disc { fill: #fff; }
-  .app.on .ab { fill: var(--blue); }
-  .app.on .ring, .app:focus-visible .ring { stroke: var(--green); stroke-width: 3.5; stroke-dasharray: none; }
-  .app.main .disc { fill: #fff; }
-  .app.main .ab { fill: var(--blue); }
-  .app .lbl { fill: rgba(255,255,255,0.85); }
-  .spoke { stroke: rgba(255,255,255,0.22); stroke-width: 2; }
-  .spoke.dev { stroke-dasharray: 5 6; }
-  .pulse { fill: var(--green); }
-  .hint { text-align: center; font-size: .78rem; color: rgba(255,255,255,0.6); margin-top: 6px; }
+/* Barra superior */
+.top{position:sticky;top:0;z-index:15;background:var(--surf);border-bottom:1px solid var(--b1)}
+.top-in{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:center;gap:14px;margin-right:auto}
+.brand img{height:42px;width:auto;display:block}
+.brand .sep{width:1px;height:32px;background:var(--b2)}
+.brand .t1{font-family:var(--fd);font-weight:700;font-size:18px;letter-spacing:.06em;line-height:1.05;text-transform:uppercase}
+.brand .t2{font-size:12px;color:var(--t2);letter-spacing:.04em}
+.search{display:flex;align-items:center;gap:8px;background:var(--b0);border:1px solid var(--b1);border-radius:999px;padding:7px 14px;min-width:0;flex:1 1 240px;max-width:340px}
+.search input{background:none;border:0;outline:none;width:100%;min-width:0}
+.search input::placeholder{color:var(--t3)}
 
-  .hub-card {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 28px 26px 24px;
-    box-shadow: var(--shadow-lg);
-    min-width: 0;
-  }
-  .st {
-    display: inline-block;
-    font: 700 .65rem 'Barlow', sans-serif;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    padding: 4px 9px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-  }
-  .st.ok { background: rgba(0,195,137,.12); color: #009E6E; }
-  .st.dev { background: rgba(245,158,11,.14); color: #B45309; }
-  .card-tag {
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    color: var(--mid);
-    margin-bottom: 4px;
-  }
-  .hub-card h2 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(1.6rem, 3.6vw, 2rem);
-    font-weight: 800;
-    line-height: 1;
-    color: var(--blue);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-  }
-  .hub-card p.d { margin-top: 10px; font-size: .92rem; line-height: 1.55; color: var(--ink); }
-  .hub-card ul { margin-top: 14px; list-style: none; display: flex; flex-direction: column; gap: 7px; }
-  .hub-card li { display: flex; gap: 10px; font-size: .88rem; line-height: 1.45; color: var(--mid); }
-  .hub-card li::before {
-    content: '';
-    flex: none;
-    width: 6px; height: 6px;
-    margin-top: 7px;
-    border-radius: 50%;
-    background: var(--green);
-  }
-  .actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
-  /* Botón igual al "Iniciar sesión" del Cotizador */
-  .btn {
-    flex: 1 1 180px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 13px;
-    border-radius: 10px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    text-decoration: none;
-    transition: all .2s cubic-bezier(.4,0,.2,1);
-  }
-  .btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-  .btn.pri { background: var(--blue); color: #fff; }
-  .btn.pri:hover { background: var(--blue-mid); }
-  .btn.sec { border: 1.5px solid var(--border); color: var(--blue); background: var(--light); }
-  .btn.sec:hover { border-color: var(--blue); }
-  .soon { font-size: .82rem; color: var(--mid); }
-  .note { margin-top: 16px; font-size: .72rem; color: var(--mid); }
+/* Portada */
+.flow{background:linear-gradient(180deg,var(--surf),var(--bg))}
+.flow-in{padding-block:22px 26px}
+.kicker{font-family:var(--fd);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:600}
+.hero-t{font-size:clamp(28px,4.6vw,44px);font-weight:800;line-height:1;margin:6px 0 8px}
+.hero-p{color:var(--t2);max-width:64ch;margin:0 0 18px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;max-width:720px}
+.fact{display:flex;gap:10px;align-items:center;background:var(--b0);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px}
+.fact b{font-family:var(--fd);font-size:22px;font-weight:700;line-height:1}
+.fact span{font-size:12.5px;color:var(--t2);line-height:1.25}
 
-  /* Acceso directo */
-  .quick {
-    width: 100%;
-    max-width: 1080px;
-    margin-top: 44px;
-    animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.2s both;
-  }
-  .quick-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: .85rem;
-    font-weight: 800;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #fff;
-    margin: 0 0 12px;
-  }
-  .quick-head::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.18); }
-  .quick-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 12px;
-    margin-bottom: 26px;
-  }
-  .qa {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    background: var(--white);
-    border-radius: 10px;
-    color: var(--ink);
-    text-decoration: none;
-    box-shadow: 0 2px 12px rgba(26,16,96,.08);
-    transition: all .2s cubic-bezier(.4,0,.2,1);
-    min-width: 0;
-  }
-  a.qa:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-  .qa.off { opacity: .6; }
-  .qa .ico {
-    flex: none;
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font: 800 14px 'Barlow Condensed', sans-serif;
-    letter-spacing: 1px;
-    color: var(--blue);
-    border: 2px solid var(--blue);
-  }
-  .qa.dev .ico { border-color: var(--orange); border-style: dashed; }
-  .qa b { display: block; font: 800 1.05rem/1.1 'Barlow Condensed', sans-serif; color: var(--blue); text-transform: uppercase; letter-spacing: .04em; }
-  .qa small { display: block; font-size: .72rem; color: var(--mid); margin-top: 2px; }
-  .qa .arr { margin-left: auto; color: var(--blue); flex: none; }
-  .qa .arr svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+/* Hub: red de apps + tarjeta de detalle */
+.lbl{font-family:var(--fd);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);font-weight:600;margin-bottom:8px}
+.hub{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:center;padding-block:20px 8px}
+@media (min-width:960px){.hub{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+.hub-svg svg{display:block;width:100%;height:auto;max-width:580px;margin:0 auto;overflow:visible}
+.app{cursor:pointer}
+.app:focus{outline:none}
+.app .disc{fill:var(--card);transition:fill .15s}
+.app .ab{fill:#fff}
+.app:hover .disc{fill:var(--raised)}
+.app.on .disc{fill:var(--green)}
+.app.on .ab{fill:#06291e}
+.app.on .ring,.app:focus-visible .ring{stroke:var(--green);stroke-width:3;stroke-dasharray:none}
+.app.main .disc{fill:var(--primary)}
+.app .lbl2{fill:var(--t2)}
+.spoke{stroke:var(--b2);stroke-width:2}
+.spoke.dev{stroke-dasharray:5 6}
+.pulse{fill:var(--green)}
+.hint{text-align:center;font-size:13px;color:var(--t3);margin:6px 0 0}
 
-  :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.case{background:var(--surf);border:1px solid var(--b2);border-radius:14px;overflow:hidden;min-width:0}
+.case-h{display:flex;gap:14px;align-items:center;padding:18px 18px 14px;border-bottom:1px solid var(--b0)}
+.i{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;flex:none;font-family:var(--fd);font-weight:800;font-size:15px;letter-spacing:.04em}
+.c-g{background:rgba(0,195,137,.15);color:var(--green)} .c-a{background:rgba(245,162,11,.14);color:var(--amber)}
+.c-b{background:rgba(0,153,230,.15);color:var(--blue)} .c-p{background:rgba(124,121,230,.2);color:#b3b0ff}
+.case-h .num{font-family:var(--fd);font-weight:700;color:var(--t3);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.case-h h2{font-size:24px;line-height:1.05}
+.case-h .when{color:var(--t2);font-size:14px;margin-top:4px}
+.case-b{padding:14px 18px 18px;display:grid;gap:14px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;width:max-content}
+.p-y{background:rgba(0,195,137,.15);color:var(--green)} .p-h{background:rgba(245,162,11,.14);color:var(--amber)}
+ul.sl{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sl li{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--b0);border-radius:var(--r);padding:9px 12px;font-size:14px}
+.sl li .ico{width:15px;height:15px;color:var(--green);margin-top:3px}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;font-family:var(--fd);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:15px;text-decoration:none;border:1px solid var(--b1);background:var(--card);color:var(--t2);transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--b2);color:var(--t)}
+.btn.pri{background:var(--green);border-color:var(--green);color:#06291e}
+.btn.pri:hover{background:#00a372;color:#06291e}
+.btn .ico{width:15px;height:15px}
+.soon{color:var(--t3);font-size:14px}
+.note{color:var(--t3);font-size:12.5px;margin:0}
 
-  /* Footer */
-  .footer { margin-top: 24px; text-align: center; }
-  .footer-text { font-size: .68rem; color: rgba(255,255,255,0.55); letter-spacing: .07em; text-transform: uppercase; }
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @media (max-width: 600px) {
-    .page { padding: 24px 16px 48px; }
-    .header { padding: 20px 20px 18px; margin-bottom: 16px; }
-    .header img { height: 54px; }
-    .hub-card { padding: 24px 20px 20px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    * { animation: none !important; transition: none !important; }
-  }
+/* Acceso directo */
+.quick{padding-block:28px 50px;display:grid;gap:22px}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+@media (max-width:400px){.list{grid-template-columns:1fr}}
+.qa{display:flex;gap:14px;align-items:center;background:var(--surf);border:1px solid var(--b1);border-radius:14px;padding:14px 16px;text-decoration:none;transition:background .15s,border-color .15s;min-width:0}
+a.qa:hover{background:var(--card);border-color:var(--b2)}
+.qa.off{opacity:.55}
+.qa .tx{min-width:0}
+.qa h3{font-size:19px;line-height:1.05}
+.qa .when{color:var(--t2);font-size:13px;margin-top:3px}
+.qa .go{margin-left:auto;flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--b0);border:1px solid var(--b1);color:var(--t2)}
+a.qa:hover .go{color:var(--green);border-color:var(--green)}
+.empty{display:none;padding:24px;text-align:center;color:var(--t2);border:1px dashed var(--b2);border-radius:14px}
+
+footer{border-top:1px solid var(--b1);color:var(--t3);font-size:12.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;padding-block:18px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){.case-h h2{font-size:20px}.brand img{height:34px}.brand .t1{font-size:15px}}
 </style>
 </head>
 <body>
-<div class="page">
-  <header class="header">
-    <img src="https://raw.githubusercontent.com/miguelarcangel-ctrl/cotizador-dpworld/main/logo_white.png" alt="DP World Panamá">
-    <h1 class="header-title">Portal de Aplicaciones</h1>
-    <p class="header-sub">DAL · Colón Logistics Park · Panamá</p>
-  </header>
+<header class="top"><div class="wrap gut top-in">
+  <div class="brand">
+    <img src="assets/dpworld-logo-fondo-oscuro.png" alt="DP World" width="68" height="42">
+    <span class="sep" aria-hidden="true"></span>
+    <div><div class="t1">Portal de aplicaciones</div><div class="t2">DAL · Colón Logistics Park · DP World Panamá</div></div>
+  </div>
+  <label class="search"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="q" type="search" placeholder="Buscar: horas, rampas, SOP…" aria-label="Buscar una app"></label>
+</div></header>
 
+<section class="flow gut"><div class="wrap flow-in">
+  <div class="kicker">Plataforma digital · Operación 3PL</div>
+  <h1 class="hero-t">Todas las apps de la operación</h1>
+  <p class="hero-p">Una sola puerta de entrada para el equipo. Toca cada app en el mapa para ver qué hace y abrirla, o búscala en el acceso directo.</p>
+  <div class="facts" id="facts"></div>
+</div></section>
+
+<main class="wrap gut">
   <section class="hub" aria-label="Hub de aplicaciones">
     <div class="hub-svg">
       <svg viewBox="0 0 520 470" id="hubSvg" role="group" aria-label="Hub y aplicaciones"></svg>
-      <p class="hint">Toca cada app para ver qué hace y abrirla.</p>
+      <p class="hint">Línea continua: en operación. Línea punteada: prototipo, borrador o en construcción.</p>
     </div>
-    <div class="hub-card" id="hubCard" aria-live="polite"></div>
+    <article class="case" id="hubCard" aria-live="polite"></article>
   </section>
 
   <section class="quick" aria-label="Acceso directo">
-    <h2 class="quick-head">En operación</h2>
-    <div class="quick-grid" id="qOk"></div>
-    <h2 class="quick-head">Prototipos y en desarrollo</h2>
-    <div class="quick-grid" id="qDev"></div>
+    <div><div class="lbl">En operación</div><div class="list" id="qOk"></div></div>
+    <div><div class="lbl">Prototipos, borradores y en construcción</div><div class="list" id="qDev"></div></div>
+    <div class="empty" id="empty">Ninguna app coincide con la búsqueda.</div>
   </section>
+</main>
 
-  <footer class="footer">
-    <p class="footer-text">🔒 Uso interno exclusivo · DP World Panamá</p>
-  </footer>
-</div>
+<footer class="gut"><div class="wrap">
+  <span>🔒 Uso interno exclusivo · DP World Panamá</span>
+  <span>DAL Colón Logistics Park</span>
+</div></footer>
 
 <script>
-/* Cada app: s = "ok" (en operación) o "dev" (prototipo / en desarrollo). links[0] es el principal. */
+/* Cada app: s = "ok" (en operación) o "dev" (prototipo / borrador / en construcción). links[0] es el principal.
+   c = color del ícono (c-g verde, c-b azul, c-p violeta, c-a ámbar). k = palabras extra para la búsqueda. */
 var APPS = [
-  {id: "hub", n: "Hub", s: "ok", st: "En operación", tag: "Plataforma digital",
+  {id: "hub", n: "Hub", s: "ok", st: "En operación", tag: "Plataforma digital", ab: "HUB", c: "c-g",
    d: "La puerta de entrada a toda la plataforma. Acceso directo a cada app, sin recordar direcciones.",
    b: ["Un solo lugar para todo el equipo", "Funciona en PC, tableta y celular", "Base para el login único de la versión 2"]},
-  {n: "Cotizador 3PL", lbl: "Cotizador", ab: "COT", s: "ok", st: "En operación", tag: "Ventas",
+  {n: "Cotizador 3PL", lbl: "Cotizador", ab: "COT", c: "c-p", s: "ok", st: "En operación", tag: "Ventas",
    d: "Propuestas comerciales 3PL en minutos, con tarifas, CAPEX/OPEX y documento de entrega operativa.",
    b: ["Cotización completa en menos de 5 minutos", "Margen con semáforo y benchmark de mercado", "PDF para el cliente y ficha interna"],
    links: [["Abrir app", "https://cotizador-dpworld-i7d3.vercel.app/"]]},
-  {n: "Control de Horas", lbl: "Horas", ab: "HRS", s: "ok", st: "En operación", tag: "Operaciones",
+  {n: "Control de Horas", lbl: "Horas", ab: "HRS", c: "c-b", s: "ok", st: "En operación", tag: "Operaciones",
    d: "El turno completo en digital, del toolbox al cierre.",
    b: ["Tareas con cronómetro y eficiencia en tiempo real", "Rutinas con QR en puntos de control", "Costo productivo contra costo perdido", "Pantalla TV para el piso de operación"],
-   links: [["Abrir app", "https://control-horas-dpworld.vercel.app/"], ["Pantalla TV", "https://control-horas-dpworld.vercel.app/dashboard.html"]]},
-  {n: "Control de Rampas", lbl: "Rampas", ab: "RMP", s: "ok", st: "En operación", tag: "Calidad · BASC",
+   links: [["Abrir app", "https://control-horas-dpworld.vercel.app/"], ["Pantalla TV", "https://control-horas-dpworld.vercel.app/dashboard.html"]], k: "turnos tv"},
+  {n: "Control de Rampas", lbl: "Rampas", ab: "RMP", c: "c-g", s: "ok", st: "En operación", tag: "Calidad · BASC",
    d: "Inspección de contenedores BASC SL-02-007 con fotos y resultado automático, hoy convertida en Control de Rampas: el contenedor de la rampa al puerto.",
    b: ["17 ítems con foto por ítem", "APTO o NO APTO al instante", "PDF listo para auditoría", "Seguimiento de rampas y vista para el cliente"],
-   links: [["Abrir app", "https://inspeccion-contenedores-dpworld.vercel.app/"]]},
-  {n: "Last Mile", lbl: "Last Mile", ab: "LM", s: "dev", st: "Prototipo", tag: "Transporte",
-   d: "Coordinación de bookings y transporte de contenedores con los transportistas, del retiro de vacío a la entrega en terminal.",
-   b: ["Bookings y asignación de transporte", "Visibilidad para el equipo y el cliente", "Se unirá con Control de Rampas"],
-   links: [["Abrir prototipo", "https://inspeccion-contenedores-dpworld.vercel.app/last-mile/prototype/"]]},
-  {n: "Alertas de Calidad", lbl: "Alertas", ab: "CAL", s: "ok", st: "En operación", tag: "Calidad · Bodega",
+   links: [["Abrir app", "https://inspeccion-contenedores-dpworld.vercel.app/"]], k: "inspección contenedores basc"},
+  {n: "Alertas de Calidad", lbl: "Alertas", ab: "CAL", c: "c-a", s: "ok", st: "En operación", tag: "Calidad · Bodega",
    d: "Alertas de calidad estandarizadas y descargables, con la marca DP World.",
    b: ["Formato único para toda la operación", "PDF listo para compartir", "Trazabilidad de cada incidencia"],
    links: [["Abrir app", "https://alertas-calidad-app.vercel.app/"]]},
-  {n: "Reportería BI", lbl: "BI", ab: "BI", s: "dev", st: "En construcción", tag: "Inteligencia operativa",
+  {n: "Mapa de Procedimientos", lbl: "Procesos", ab: "SOP", c: "c-p", s: "dev", st: "Borrador R03", tag: "Procesos · CNP",
+   d: "Todos los procedimientos de la operación de Cervecería Nacional en la bodega DP World: pasos, roles y documentos de cada caso.",
+   b: ["11 procedimientos, del inbound a la facturación", "Filtro por rol para ver solo lo que le toca a cada cargo", "Pasos con casilla para marcar a medida que se completan", "Plazos clave y preguntas abiertas señaladas"],
+   links: [["Abrir mapa", "mapa-procedimientos/"]], k: "sop cnp cervecería nacional procedimientos manual"},
+  {n: "Last Mile", lbl: "Last Mile", ab: "LM", c: "c-b", s: "dev", st: "Prototipo", tag: "Transporte",
+   d: "Coordinación de bookings y transporte de contenedores con los transportistas, del retiro de vacío a la entrega en terminal.",
+   b: ["Bookings y asignación de transporte", "Visibilidad para el equipo y el cliente", "Se unirá con Control de Rampas"],
+   links: [["Abrir prototipo", "https://inspeccion-contenedores-dpworld.vercel.app/last-mile/prototype/"]], k: "booking transportista cernac"},
+  {n: "Reportería BI", lbl: "BI", ab: "BI", c: "c-a", s: "dev", st: "En construcción", tag: "Inteligencia operativa",
    d: "Tableros de Power BI e indicadores alimentados desde P4.",
-   b: ["KPIs de operación en un solo tablero", "Reportería automática", "Base de la inteligencia operativa del año 2"]}
+   b: ["KPIs de operación en un solo tablero", "Reportería automática", "Base de la inteligencia operativa del año 2"], k: "power bi kpi"}
 ];
 
 var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-var svg = document.getElementById("hubSvg"), NS = "http://www.w3.org/2000/svg", cx = 260, cy = 228, R0 = 168;
-var ARROW = '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+var svg = document.getElementById("hubSvg"), NS = "http://www.w3.org/2000/svg", cx = 260, cy = 232, R0 = 172;
+var ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+var CHECK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
 function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); }
 function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+function ext(u) { return /^https?:/.test(u) ? ' target="_blank" rel="noopener"' : ''; }
 
 var sats = APPS.slice(1);
+var ok = sats.filter(function (a) { return a.s === "ok"; }).length;
+document.getElementById("facts").innerHTML =
+  '<div class="fact"><b>' + ok + '</b><span>Apps en operación</span></div>' +
+  '<div class="fact"><b>' + (sats.length - ok) + '</b><span>Prototipos, borradores y en construcción</span></div>' +
+  '<div class="fact"><b>1</b><span>Puerta de entrada para todo el equipo</span></div>';
+
 sats.forEach(function (a, i) {
   var ang = -Math.PI / 2 + i * 2 * Math.PI / sats.length;
   a.x = cx + R0 * Math.cos(ang); a.y = cy + R0 * Math.sin(ang);
@@ -321,14 +220,14 @@ function node(a, x, y, r, main) {
   var g = el("g", {"class": "app" + (main ? " main" : ""), tabindex: "0", role: "button", "aria-label": a.n});
   el("circle", {cx: x, cy: y, r: r, "class": "disc"}, g);
   el("circle", {cx: x, cy: y, r: r, "class": "ring", fill: "none",
-    stroke: main ? "#00C389" : (a.s === "ok" ? "rgba(255,255,255,0.75)" : "#F59E0B"),
-    "stroke-width": main ? 3 : 2.5, "stroke-dasharray": a.s === "ok" ? "" : "5 5"}, g);
+    stroke: main ? "#00C389" : (a.s === "ok" ? "rgba(255,255,255,.35)" : "#f5a20b"),
+    "stroke-width": main ? 3 : 2, "stroke-dasharray": a.s === "ok" ? "" : "5 5"}, g);
   var t = el("text", {x: x, y: y + (main ? 10 : 6), "text-anchor": "middle", "class": "ab",
-    "font-family": "Barlow Condensed,Arial", "font-weight": "800", "font-size": main ? 30 : 18, "letter-spacing": "1"}, g);
-  t.textContent = main ? "HUB" : a.ab;
+    "font-family": "Barlow Condensed,Arial", "font-weight": "800", "font-size": main ? 30 : 17, "letter-spacing": "1"}, g);
+  t.textContent = a.ab;
   if (!main) {
-    var l = el("text", {x: x, y: y < cy - r ? y - r - 10 : y + r + 19, "text-anchor": "middle", "class": "lbl",
-      "font-family": "Barlow,Arial", "font-weight": "600", "font-size": "16"}, g);
+    var l = el("text", {x: x, y: y < cy - r ? y - r - 10 : y + r + 19, "text-anchor": "middle", "class": "lbl2",
+      "font-family": "Barlow,Arial", "font-weight": "600", "font-size": "15"}, g);
     l.textContent = a.lbl;
   }
   function s() { hubSel(a); }
@@ -336,38 +235,48 @@ function node(a, x, y, r, main) {
   g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); s(); } });
   a.g = g;
 }
-sats.forEach(function (a) { node(a, a.x, a.y, 34, false); });
-node(APPS[0], cx, cy, 58, true);
+sats.forEach(function (a) { node(a, a.x, a.y, 32, false); });
+node(APPS[0], cx, cy, 56, true);
 
 function hubSel(a) {
   sats.forEach(function (x) { x.g.classList.toggle("on", x === a); });
-  var acts = "";
-  if (a.links) {
-    acts = '<div class="actions">' + a.links.map(function (l, i) {
-      return '<a class="btn ' + (i ? "sec" : "pri") + '" href="' + esc(l[1]) + '" target="_blank" rel="noopener">' + esc(l[0]) + (i ? "" : ARROW) + '</a>';
-    }).join("") + '</div>';
-  } else if (a.id !== "hub") {
-    acts = '<div class="actions"><span class="soon">Disponible pronto.</span></div>';
-  }
+  var acts = a.links
+    ? '<div class="acts">' + a.links.map(function (l, i) {
+        return '<a class="btn' + (i ? '' : ' pri') + '" href="' + esc(l[1]) + '"' + ext(l[1]) + '>' + esc(l[0]) + (i ? '' : ARROW) + '</a>';
+      }).join("") + '</div>'
+    : (a.id === "hub" ? '' : '<div class="soon">Disponible pronto.</div>');
   document.getElementById("hubCard").innerHTML =
-    '<span class="st ' + a.s + '">' + esc(a.st) + '</span>' +
-    '<p class="card-tag">' + esc(a.tag) + '</p>' +
-    '<h2>' + esc(a.n) + '</h2>' +
-    '<p class="d">' + esc(a.d) + '</p>' +
-    '<ul>' + a.b.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul>' + acts +
-    (a.id === "hub" ? '<p class="note">Línea continua: en operación. Línea punteada: prototipo o en desarrollo.</p>' : "");
+    '<div class="case-h"><div class="i ' + a.c + '">' + esc(a.ab) + '</div><div>' +
+      '<div class="num">' + esc(a.tag) + '</div><h2>' + esc(a.n) + '</h2></div></div>' +
+    '<div class="case-b"><span class="pill ' + (a.s === "ok" ? "p-y" : "p-h") + '">' + esc(a.st) + '</span>' +
+      '<div class="when" style="color:var(--t2)">' + esc(a.d) + '</div>' +
+      '<ul class="sl">' + a.b.map(function (x) { return '<li>' + CHECK + '<span>' + esc(x) + '</span></li>'; }).join("") + '</ul>' +
+      acts + '</div>';
 }
 hubSel(APPS[0]);
 
-/* Acceso directo: una fila por app, agrupadas por estado */
+/* Acceso directo: una fila por app, agrupadas por estado, filtrables con la búsqueda */
 sats.forEach(function (a) {
   var link = a.links && a.links[0];
   var q = document.createElement(link ? "a" : "div");
-  q.className = "qa " + a.s + (link ? "" : " off");
-  if (link) { q.href = link[1]; q.target = "_blank"; q.rel = "noopener"; }
-  q.innerHTML = '<span class="ico">' + esc(a.ab) + '</span><span><b>' + esc(a.n) + '</b><small>' + esc(a.st) + ' · ' + esc(a.tag) + '</small></span>' +
-    (link ? '<span class="arr">' + ARROW + '</span>' : '');
+  q.className = "qa" + (link ? "" : " off");
+  if (link) { q.href = link[1]; if (/^https?:/.test(link[1])) { q.target = "_blank"; q.rel = "noopener"; } }
+  q.innerHTML = '<div class="i ' + a.c + '">' + esc(a.ab) + '</div><div class="tx"><h3>' + esc(a.n) + '</h3><div class="when">' + esc(a.st) + ' · ' + esc(a.tag) + '</div></div>' +
+    (link ? '<span class="go">' + ARROW + '</span>' : '');
+  a.q = q;
+  a.text = [a.n, a.lbl, a.ab, a.tag, a.d, a.k || ""].join(" ");
   document.getElementById(a.s === "ok" ? "qOk" : "qDev").appendChild(q);
+});
+
+function norm(t) { return t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+document.getElementById("q").addEventListener("input", function () {
+  var v = norm(this.value.trim()), any = false;
+  sats.forEach(function (a) { var hit = !v || norm(a.text).indexOf(v) > -1; a.q.hidden = !hit; any = any || hit; });
+  ["qOk", "qDev"].forEach(function (id) {
+    var box = document.getElementById(id);
+    box.parentNode.hidden = !Array.prototype.some.call(box.children, function (c) { return !c.hidden; });
+  });
+  document.getElementById("empty").style.display = any ? "none" : "block";
 });
 </script>
 </body>
