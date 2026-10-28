@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>DP World Panamá — Portal de Aplicaciones</title>
+<script>/* Tema antes de pintar (skill linea-grafica): oscuro por defecto */(function(){var t;try{t=localStorage.getItem('dpw_tema')}catch(e){}document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();</script>
+<meta name="theme-color" content="#0d0b28">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="dpw/pwa/favicon-32.png">
+<link rel="apple-touch-icon" href="dpw/pwa/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Portal DP World">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="dpw/dpw-shell.css">
@@ -21,6 +29,18 @@
   --fb:'Barlow','Segoe UI',Arial,sans-serif;
   color-scheme:dark;
 }
+/* Tema claro (skill linea-grafica): mismos tokens con fondo claro */
+html[data-theme="light"]{color-scheme:light;
+  --bg:#F2F3F8; --surf:#FFFFFF; --card:#EEF0F7; --raised:#E4E6F2; --primary:#1A1060;
+  --green:#00996b; --amber:#b86e00; --blue:#0070b8; --red:#d10037;
+  --b0:rgba(26,16,96,.04); --b1:rgba(26,16,96,.12); --b2:rgba(26,16,96,.22);
+  --t:#1B1B2F; --t2:rgba(27,27,47,.72); --t3:rgba(27,27,47,.52)}
+html[data-theme="light"] .app .ab{fill:#1A1060}
+html[data-theme="light"] .app.main .ab{fill:#fff}
+html[data-theme="light"] .app.on .ab{fill:#fff}
+html[data-theme="light"] .c-p{color:#4a3fb0}
+html[data-theme="light"] .app .ring[stroke^="rgba(255"]{stroke:rgba(26,16,96,.3)}
+html[data-theme="light"] .btn.pri,html[data-theme="light"] .btn.pri:hover{color:#fff}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg)}
@@ -112,6 +132,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;
 <body>
 <!-- PORTADA: molde Last Mile, escena «mapa». El portal no tiene usuarios: la tarjeta solo lleva Entrar. -->
 <div class="dpw-login" id="portada">
+  <button type="button" class="dpw-lg-install" data-dpw="instalar" hidden>Instalar app</button>
   <div class="dpw-lg-art" aria-hidden="true"><svg data-dpw-art></svg></div>
   <div class="dpw-lg-hero">
     <div class="dpw-lg-kick">DP World · Portal de aplicaciones</div>
@@ -138,6 +159,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;
     <div><div class="dpw-title">DP WORLD</div><div class="dpw-sub">Portal de aplicaciones</div></div>
   </div>
   <div class="dpw-hdr-r">
+    <button type="button" class="dpw-hbtn dpw-install dpw-hide-sm" data-dpw="instalar" hidden>Instalar</button>
+    <button type="button" class="dpw-hbtn" data-dpw="tema">Claro</button>
     <button type="button" class="dpw-salir" id="salirBtn">Salir</button>
   </div>
 </header>
@@ -313,6 +336,7 @@ document.getElementById("entrarBtn").addEventListener("click", function () { ver
 ["salirBtn", "salirBtn2"].forEach(function (id) { document.getElementById(id).addEventListener("click", function () { DPW.cerrarMenu(); verPortada(true); }); });
 try { if (sessionStorage.getItem("hub_entro")) portada.hidden = true; } catch (e) {}
 DPW.escena("mapa", portada);
+DPW.pwa("sw.js");
 function abrir(u) { if (/^https?:/.test(u)) window.open(u, "_blank", "noopener"); else location.href = u; }
 DPW.menu([{id: "inicio", label: "Inicio", on: function () { window.scrollTo(0, 0); }}].concat(sats.map(function (a) {
   var l = a.links && a.links[0];
