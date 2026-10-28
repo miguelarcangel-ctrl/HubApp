@@ -4,10 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>DP World Panamá — Portal de Aplicaciones</title>
+<script>/* Tema antes de pintar (skill linea-grafica): oscuro por defecto */(function(){var t;try{t=localStorage.getItem('dpw_tema')}catch(e){}document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();</script>
+<meta name="theme-color" content="#0d0b28">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="dpw/pwa/favicon-32.png">
+<link rel="apple-touch-icon" href="dpw/pwa/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Portal DP World">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="dpw/dpw-shell.css">
 <style>
-/* Misma línea gráfica que el Mapa de Procedimientos: tema oscuro índigo, barra superior con logo y tarjetas #16143d. */
+/* Cinta superior, menú desplegable y portada: dpw/dpw-shell.css (línea gráfica común, molde Last Mile).
+   El contenido sigue la línea gráfica del Mapa de Procedimientos: tema oscuro índigo, barra superior con logo y tarjetas #16143d. */
 :root{
   --bg:#0d0b28; --surf:#16143d; --card:#1e1c50; --raised:#252368;
   --primary:#3E3C90; --pk:#2D2B6B;
@@ -19,6 +29,18 @@
   --fb:'Barlow','Segoe UI',Arial,sans-serif;
   color-scheme:dark;
 }
+/* Tema claro (skill linea-grafica): mismos tokens con fondo claro */
+html[data-theme="light"]{color-scheme:light;
+  --bg:#F2F3F8; --surf:#FFFFFF; --card:#EEF0F7; --raised:#E4E6F2; --primary:#1A1060;
+  --green:#00996b; --amber:#b86e00; --blue:#0070b8; --red:#d10037;
+  --b0:rgba(26,16,96,.04); --b1:rgba(26,16,96,.12); --b2:rgba(26,16,96,.22);
+  --t:#1B1B2F; --t2:rgba(27,27,47,.72); --t3:rgba(27,27,47,.52)}
+html[data-theme="light"] .app .ab{fill:#1A1060}
+html[data-theme="light"] .app.main .ab{fill:#fff}
+html[data-theme="light"] .app.on .ab{fill:#fff}
+html[data-theme="light"] .c-p{color:#4a3fb0}
+html[data-theme="light"] .app .ring[stroke^="rgba(255"]{stroke:rgba(26,16,96,.3)}
+html[data-theme="light"] .btn.pri,html[data-theme="light"] .btn.pri:hover{color:#fff}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg)}
@@ -29,17 +51,8 @@ h1,h2,h3{font-family:var(--fd);text-transform:uppercase;letter-spacing:.04em;mar
 button,input{font:inherit;color:inherit}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--green);outline-offset:2px}
-.ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* Barra superior */
-.top{position:sticky;top:0;z-index:15;background:var(--surf);border-bottom:1px solid var(--b1)}
-.top-in{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap;padding-block:10px}
-.brand{display:flex;align-items:center;gap:14px;margin-right:auto}
-.brand img{height:42px;width:auto;display:block}
-.brand .sep{width:1px;height:32px;background:var(--b2)}
-.brand .t1{font-family:var(--fd);font-weight:700;font-size:18px;letter-spacing:.06em;line-height:1.05;text-transform:uppercase}
-.brand .t2{font-size:12px;color:var(--t2);letter-spacing:.04em}
-.search{display:flex;align-items:center;gap:8px;background:var(--b0);border:1px solid var(--b1);border-radius:999px;padding:7px 14px;min-width:0;flex:1 1 240px;max-width:340px}
+.search{display:flex;align-items:center;gap:8px;background:var(--b0);border:1px solid var(--b1);border-radius:999px;padding:9px 16px;min-width:0;max-width:420px;margin:0 0 18px}
 .search input{background:none;border:0;outline:none;width:100%;min-width:0}
 .search input::placeholder{color:var(--t3)}
 
@@ -87,13 +100,12 @@ a{color:inherit}
 .p-y{background:rgba(0,195,137,.15);color:var(--green)} .p-h{background:rgba(245,162,11,.14);color:var(--amber)}
 ul.sl{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .sl li{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--b0);border-radius:var(--r);padding:9px 12px;font-size:14px}
-.sl li .ico{width:15px;height:15px;color:var(--green);margin-top:3px}
+.sl li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);margin-top:8px;flex:none}
 .acts{display:flex;flex-wrap:wrap;gap:8px}
 .btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;font-family:var(--fd);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:15px;text-decoration:none;border:1px solid var(--b1);background:var(--card);color:var(--t2);transition:border-color .15s,background .15s}
 .btn:hover{border-color:var(--b2);color:var(--t)}
 .btn.pri{background:var(--green);border-color:var(--green);color:#06291e}
 .btn.pri:hover{background:#00a372;color:#06291e}
-.btn .ico{width:15px;height:15px}
 .soon{color:var(--t3);font-size:14px}
 .note{color:var(--t3);font-size:12.5px;margin:0}
 
@@ -107,30 +119,63 @@ a.qa:hover{background:var(--card);border-color:var(--b2)}
 .qa .tx{min-width:0}
 .qa h3{font-size:19px;line-height:1.05}
 .qa .when{color:var(--t2);font-size:13px;margin-top:3px}
-.qa .go{margin-left:auto;flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--b0);border:1px solid var(--b1);color:var(--t2)}
+.qa .go{margin-left:auto;flex:none;padding:6px 12px;border-radius:999px;background:var(--b0);border:1px solid var(--b1);color:var(--t2);font-family:var(--fd);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
 a.qa:hover .go{color:var(--green);border-color:var(--green)}
 .empty{display:none;padding:24px;text-align:center;color:var(--t2);border:1px dashed var(--b2);border-radius:14px}
 
 footer{border-top:1px solid var(--b1);color:var(--t3);font-size:12.5px}
 footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;padding-block:18px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:560px){.case-h h2{font-size:20px}.brand img{height:34px}.brand .t1{font-size:15px}}
+@media (max-width:560px){.case-h h2{font-size:20px}}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap gut top-in">
-  <div class="brand">
-    <img src="assets/dpworld-logo-fondo-oscuro.png" alt="DP World" width="68" height="42">
-    <span class="sep" aria-hidden="true"></span>
-    <div><div class="t1">Portal de aplicaciones</div><div class="t2">DAL · Colón Logistics Park · DP World Panamá</div></div>
+<!-- PORTADA: molde Last Mile, escena «mapa». El portal no tiene usuarios: la tarjeta solo lleva Entrar. -->
+<div class="dpw-login" id="portada">
+  <button type="button" class="dpw-lg-install" data-dpw="instalar" hidden>Instalar app</button>
+  <div class="dpw-lg-art" aria-hidden="true"><svg data-dpw-art></svg></div>
+  <div class="dpw-lg-hero">
+    <div class="dpw-lg-kick">DP World · Portal de aplicaciones</div>
+    <h1 class="dpw-lg-h1"><span>Todas tus</span> <span>apps en un</span> <em>solo lugar.</em></h1>
+    <p class="dpw-lg-lead">La puerta de entrada a la plataforma digital del DAL Colón Logistics Park.</p>
   </div>
-  <label class="search"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="q" type="search" placeholder="Buscar: horas, rampas, SOP…" aria-label="Buscar una app"></label>
-</div></header>
+  <svg class="dpw-lg-ground" data-dpw-ground aria-hidden="true"></svg>
+  <div class="dpw-lg-card">
+    <div class="dpw-lg-logo">
+      <img src="dpw/assets/dpworld-logo-fondo-claro.png" alt="DP World">
+      <div class="dpw-lg-app">Portal de aplicaciones</div>
+      <div class="dpw-lg-ref">DAL · Colón Logistics Park · Panamá</div>
+    </div>
+    <button class="dpw-lg-btn" id="entrarBtn" type="button">Entrar</button>
+    <div class="dpw-lg-note">Cada app pide su propio usuario al abrirla.</div>
+    <div class="dpw-lg-foot">Uso interno exclusivo · DP World Panamá</div>
+  </div>
+</div>
+
+<header class="dpw-hdr">
+  <div class="dpw-hdr-l">
+    <button type="button" class="dpw-burger" data-dpw="menu" aria-label="Abrir menú" aria-expanded="false" aria-controls="dpwDrawer"><span></span><span></span><span></span></button>
+    <div class="dpw-logo"><img src="dpw/assets/dpworld-logo-fondo-claro.png" alt="DP World"></div>
+    <div><div class="dpw-title">DP WORLD</div><div class="dpw-sub">Portal de aplicaciones</div></div>
+  </div>
+  <div class="dpw-hdr-r">
+    <button type="button" class="dpw-hbtn dpw-install dpw-hide-sm" data-dpw="instalar" hidden>Instalar</button>
+    <button type="button" class="dpw-hbtn" data-dpw="tema">Claro</button>
+    <button type="button" class="dpw-salir" id="salirBtn">Salir</button>
+  </div>
+</header>
+<div class="dpw-ov" id="dpwOv" data-dpw="menu-close" hidden></div>
+<nav class="dpw-drawer" id="dpwDrawer" aria-label="Menú principal" aria-hidden="true">
+  <div class="dpw-drawer-h"><div class="dpw-logo"><img src="dpw/assets/dpworld-logo-fondo-claro.png" alt="DP World"></div><div><div class="dpw-title">DP WORLD</div><div class="dpw-sub">Portal de aplicaciones</div></div><button type="button" class="dpw-close" data-dpw="menu-close" aria-label="Cerrar menú">×</button></div>
+  <div class="dpw-items" id="dpwItems"></div>
+  <div class="dpw-drawer-f"><span></span><button type="button" class="dpw-salir" id="salirBtn2">Salir</button></div>
+</nav>
 
 <section class="flow gut"><div class="wrap flow-in">
   <div class="kicker">Plataforma digital · Operación 3PL</div>
   <h1 class="hero-t">Todas las apps de la operación</h1>
   <p class="hero-p">Una sola puerta de entrada para el equipo. Toca cada app en el mapa para ver qué hace y abrirla, o búscala en el acceso directo.</p>
+  <label class="search"><input id="q" type="search" placeholder="Buscar: horas, rampas, SOP…" aria-label="Buscar una app"></label>
   <div class="facts" id="facts"></div>
 </div></section>
 
@@ -151,10 +196,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;
 </main>
 
 <footer class="gut"><div class="wrap">
-  <span>🔒 Uso interno exclusivo · DP World Panamá</span>
+  <span>Uso interno exclusivo · DP World Panamá</span>
   <span>DAL Colón Logistics Park</span>
 </div></footer>
 
+<script src="dpw/dpw-shell.js"></script>
+<script src="dpw/dpw-escenas.js"></script>
+<script src="dpw/dpw-mapa.js"></script>
 <script>
 /* Cada app: s = "ok" (en operación) o "dev" (prototipo / borrador / en construcción). links[0] es el principal.
    c = color del ícono (c-g verde, c-b azul, c-p violeta, c-a ámbar). k = palabras extra para la búsqueda. */
@@ -193,8 +241,6 @@ var APPS = [
 
 var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 var svg = document.getElementById("hubSvg"), NS = "http://www.w3.org/2000/svg", cx = 260, cy = 232, R0 = 172;
-var ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-var CHECK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
 function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); }
 function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
 function ext(u) { return /^https?:/.test(u) ? ' target="_blank" rel="noopener"' : ''; }
@@ -242,7 +288,7 @@ function hubSel(a) {
   sats.forEach(function (x) { x.g.classList.toggle("on", x === a); });
   var acts = a.links
     ? '<div class="acts">' + a.links.map(function (l, i) {
-        return '<a class="btn' + (i ? '' : ' pri') + '" href="' + esc(l[1]) + '"' + ext(l[1]) + '>' + esc(l[0]) + (i ? '' : ARROW) + '</a>';
+        return '<a class="btn' + (i ? '' : ' pri') + '" href="' + esc(l[1]) + '"' + ext(l[1]) + '>' + esc(l[0]) + '</a>';
       }).join("") + '</div>'
     : (a.id === "hub" ? '' : '<div class="soon">Disponible pronto.</div>');
   document.getElementById("hubCard").innerHTML =
@@ -250,7 +296,7 @@ function hubSel(a) {
       '<div class="num">' + esc(a.tag) + '</div><h2>' + esc(a.n) + '</h2></div></div>' +
     '<div class="case-b"><span class="pill ' + (a.s === "ok" ? "p-y" : "p-h") + '">' + esc(a.st) + '</span>' +
       '<div class="when" style="color:var(--t2)">' + esc(a.d) + '</div>' +
-      '<ul class="sl">' + a.b.map(function (x) { return '<li>' + CHECK + '<span>' + esc(x) + '</span></li>'; }).join("") + '</ul>' +
+      '<ul class="sl">' + a.b.map(function (x) { return '<li><span>' + esc(x) + '</span></li>'; }).join("") + '</ul>' +
       acts + '</div>';
 }
 hubSel(APPS[0]);
@@ -262,7 +308,7 @@ sats.forEach(function (a) {
   q.className = "qa" + (link ? "" : " off");
   if (link) { q.href = link[1]; if (/^https?:/.test(link[1])) { q.target = "_blank"; q.rel = "noopener"; } }
   q.innerHTML = '<div class="i ' + a.c + '">' + esc(a.ab) + '</div><div class="tx"><h3>' + esc(a.n) + '</h3><div class="when">' + esc(a.st) + ' · ' + esc(a.tag) + '</div></div>' +
-    (link ? '<span class="go">' + ARROW + '</span>' : '');
+    (link ? '<span class="go">Abrir</span>' : '');
   a.q = q;
   a.text = [a.n, a.lbl, a.ab, a.tag, a.d, a.k || ""].join(" ");
   document.getElementById(a.s === "ok" ? "qOk" : "qDev").appendChild(q);
@@ -278,6 +324,25 @@ document.getElementById("q").addEventListener("input", function () {
   });
   document.getElementById("empty").style.display = any ? "none" : "block";
 });
+
+/* Portada y menú desplegable (molde Last Mile): Inicio y cada app, agrupadas por estado */
+var portada = document.getElementById("portada");
+function verPortada(on) {
+  portada.hidden = !on;
+  try { on ? sessionStorage.removeItem("hub_entro") : sessionStorage.setItem("hub_entro", "1"); } catch (e) {}
+  if (!on) window.scrollTo(0, 0);
+}
+document.getElementById("entrarBtn").addEventListener("click", function () { verPortada(false); });
+["salirBtn", "salirBtn2"].forEach(function (id) { document.getElementById(id).addEventListener("click", function () { DPW.cerrarMenu(); verPortada(true); }); });
+try { if (sessionStorage.getItem("hub_entro")) portada.hidden = true; } catch (e) {}
+DPW.escena("mapa", portada);
+DPW.pwa("sw.js");
+function abrir(u) { if (/^https?:/.test(u)) window.open(u, "_blank", "noopener"); else location.href = u; }
+DPW.menu([{id: "inicio", label: "Inicio", on: function () { window.scrollTo(0, 0); }}].concat(sats.map(function (a) {
+  var l = a.links && a.links[0];
+  return {id: a.n, label: a.n, group: a.s === "ok" ? "En operación" : "Prototipos y en construcción", hint: l ? "" : "Pronto",
+    on: l ? function () { abrir(l[1]); } : function () { hubSel(a); document.getElementById("hubCard").scrollIntoView({behavior: "smooth"}); }};
+})), "inicio");
 </script>
 </body>
 </html>
