@@ -4,7 +4,7 @@ Todas las apps (Hub, Cotizador 3PL, Control de Horas, Control de Rampas, Last Mi
 
 - **Login** con la frase de la app en grande a la izquierda, una **escena animada propia de la app** al fondo y la tarjeta blanca a la derecha. La escena la elige el usuario para cada app.
 - **Cinta superior blanca** con el botón de tres rayas, el logo, DP WORLD y el nombre de la app; a la derecha solo Instalar, Claro/Oscuro, el rol y Salir.
-- **Menú desplegable lateral** con todas las secciones de la app (por ejemplo Turno, Insights y Vista TV en Control de Horas).
+- **Menú desplegable lateral** con todas las secciones de la app. Con muchas secciones, en submenús desplegables por grupo (`DPW.menu(items, activo, {plegable:true})`; molde: Control de Horas).
 - **Tema claro y oscuro** en todas, con el botón de texto Claro/Oscuro (preferencia común `dpw_tema`).
 - **Botón Instalar** en todas (cinta y login): cada app es instalable en PC, tableta y celular.
 - **Sin íconos ni emojis**: solo texto en Barlow Condensed en mayúsculas.
